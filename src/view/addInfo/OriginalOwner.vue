@@ -7,25 +7,21 @@
       <my-tip></my-tip>
 
       <van-form
-        ref="basicInfo"
+        ref="originalInfo"
         validate-trigger="onChange"
         :show-error-message="false"
-        @submit="onsubmit"
       >
 
-        <div class="uploadImg">
-          <img :src="uploadImg" alt="">
-        </div>
-
+        <my-ocr :parentName="'原车主信息'" @originalOcr="originalOcr"></my-ocr>
 
         <my-label label="证件类型" :is_require="false"></my-label>
         <van-field
           class="input"
           readonly
           clickable
-          :value="picker_value"
+          :value="tj_type1"
           :border="false"
-          name="markit"
+          name="tj_type1"
           placeholder="证件类型"
           @click="showPicker = true"
         />
@@ -43,8 +39,8 @@
         <my-label label="证件号码" :is_require="false"></my-label>
         <van-field
           class="input"
-          v-model="mobile"
-          name="mobile"
+          v-model="zj_number1"
+          name="zj_number1"
           size="large"
           clearable
           :border="false"
@@ -54,8 +50,8 @@
         <my-label label="姓名/名称" :is_require="false"></my-label>
         <van-field
           class="input"
-          v-model="mobile"
-          name="mobile"
+          v-model="owner_name1"
+          name="owner_name1"
           size="large"
           clearable
           :border="false"
@@ -65,7 +61,7 @@
         <my-label label="证件地址" :is_require="false"></my-label>
         <van-field
           class="input"
-          v-model="mobile"
+          v-model="zj_address1"
           name="mobile"
           size="large"
           clearable
@@ -76,8 +72,9 @@
         <my-label label="联系电话" :is_require="false"></my-label>
         <van-field
           class="input"
-          v-model="car_number"
-          name="name"
+          type="del"
+          v-model="owner_mobile1"
+          name="owner_mobile1"
           placeholder="联系电话"
           size="large"
           clearable
@@ -85,7 +82,15 @@
         >
         </van-field>
 
-        <my-buttons></my-buttons>
+        <div class="button-box">
+          <button class="pre-button" :disabled="pre_disabled"  @click="preStep">
+            上一步
+          </button>
+
+          <button class="next-button" :disabled="next_disabled"  @click="nextStep">
+            下一步
+          </button>
+        </div>
       </van-form>
 
     </div>
@@ -98,13 +103,17 @@
   export default {
     data () {
       return {
-        mobile: '',
-        car_number: '',
+        tj_type1: '身份证',
+        zj_number1: '',
+        owner_name1: '',
+        owner_mobile1: '',
+        zj_address1: '',
         showPicker: false,
-        picker_value: '',
         loading: false,
         uploadImg,
         cardType: [ '身份证', '营业执照', '护照', '港澳通行证', '港澳居住证', '其它证件'], //证件类型d
+        next_disabled: false,
+        pre_disabled: false
       }
     },
     created() {
@@ -114,16 +123,29 @@
         this.picker_value = value
         this.showPicker = false
       },
-      async onsubmit (value) {
-        // try {
-        //   // await this.$refs.basicInfo.validate()
-        //   console.log(value)
-        //   return value
-        // } catch (e) {
-        //   console.log(e)
-        // }
+      preStep () {
+        this.$_mutations.toPre(this.$_store)
+        this.pre_disabled = true
+        setTimeout(() => this.pre_disabled = false, 500)
+      },
+      originalOcr (info) {
+        console.log(info)
+          this.zj_number1 = info.name
+          this.owner_name1 = info.num
+          this.zj_address1 = info.address
+      },
+      async nextStep () {
+        try {
+            let value = this.$refs.originalInfo.getValues()
+          this.$_store.original_form = value
+          this.$_mutations.toNext(this.$_store)
+          this.next_disabled = true
+          setTimeout(() => this.next_disabled = false, 500)
+        } catch (e) {
+          console.error(e)
+        }
+      },
 
-      }
     },
 
   }

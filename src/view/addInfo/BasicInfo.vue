@@ -8,7 +8,6 @@
         ref="basicInfo"
         validate-trigger="onChange"
         :show-error-message="false"
-        @submit="onsubmit"
       >
 
         <my-label label="姓名" ></my-label>
@@ -104,10 +103,8 @@
         checked: true,
         markitList: [],
         next_disabled: false,
-        basic_form: {
-          company_id: '',
-          market_id: '',
-        }
+        company_id: '',
+        market_id: '',
       }
     },
     created() {
@@ -129,8 +126,8 @@
         this.picker_value = value
         console.log(value, index)
         this.showPicker = false
-        this.basic_form.market_id = this.markitList[index].market_id
-        this.basic_form.company_id = this.markitList[index].company_id
+        this.market_id = this.markitList[index].market_id
+        this.company_id = this.markitList[index].company_id
       },
       handleCalendar (date) { //点击选择日期完成按钮时触发
         this.calendar_value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -138,28 +135,15 @@
       },
       async nextStep () {
         try {
-          // await this.$refs.basicInfo.validate()
+            await this.$refs.basicInfo.validate()
+            let value = this.$refs.basicInfo.getValues()
+          this.$_store.basic_form = value
           this.$_mutations.toNext(this.$_store)
           this.next_disabled = true
           setTimeout(() => this.next_disabled = false, 500)
         } catch (e) {
           console.error(e)
         }
-      },
-      async onsubmit (value) {
-        try {
-          // console.log(value)
-
-          this.basic_form = value
-          console.log(this.basic_form)
-          if (this.checked) {
-            window.localStorage.setItem('user_info', JSON.stringify(value))
-          }
-          return value
-        } catch (e) {
-          console.log(e)
-        }
-
       }
     },
 

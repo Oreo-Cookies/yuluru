@@ -41,7 +41,7 @@ const service = axios.create({
 
     // baseURL:config.baseURL,
     // baseURL: 'http://testcarapi.hileader.com',
-    timeout: 6000 // 请求超时时间
+    // timeout: 6000 // 请求超时时间
 })
 
 const err = (error) => {

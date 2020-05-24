@@ -7,13 +7,12 @@
       <my-tip></my-tip>
 
       <van-form
-        ref="basicInfo"
+        ref="carInfo"
         validate-trigger="onChange"
         :show-error-message="false"
-        @submit="onsubmit"
       >
 
-        <my-ocr></my-ocr>
+        <my-ocr :parentName="'车辆信息'" @carOcr="carOcr"></my-ocr>
 
         <my-label label="车牌号码" ></my-label>
         <van-field
@@ -33,15 +32,16 @@
           class="input"
           readonly
           clickable
-          :value="picker_value"
+          :value="car_number_name"
           :border="false"
-          name="markit"
+          name="car_number_name"
           placeholder="02小型汽车"
-          @click="showPicker = true"
+          @click="selectCarType"
           :rules="[{ required: true, message: '请选择号牌种类' }]"
         />
         <van-popup v-model="showPicker" round position="bottom">
           <van-picker
+              ref="car_type"
             show-toolbar
             title="号牌种类"
             :columns="columns"
@@ -55,13 +55,13 @@
         <my-label label="车架号" ></my-label>
         <van-field
           class="input"
-          v-model="mobile"
-          name="mobile"
+          v-model="vin"
+          name="vin"
           size="large"
           clearable
           :border="false"
           placeholder="请输入"
-          maxlength="12"
+          maxlength="17"
           :show-word-limit="true"
           :rules="[{ required: true, message: '请输入车架号'}]"
         ></van-field>
@@ -69,8 +69,8 @@
         <my-label label="品牌型号" ></my-label>
         <van-field
           class="input"
-          v-model="mobile"
-          name="mobile"
+          v-model="ppxh"
+          name="ppxh"
           size="large"
           clearable
           :border="false"
@@ -81,8 +81,8 @@
         <my-label label="登记证号" ></my-label>
         <van-field
           class="input"
-          v-model="mobile"
-          name="mobile"
+          v-model="dj_number"
+          name="dj_number"
           size="large"
           clearable
           :border="false"
@@ -91,7 +91,15 @@
         ></van-field>
 
 
-        <my-buttons></my-buttons>
+        <div class="button-box">
+          <button class="pre-button" :disabled="pre_disabled"  @click="preStep">
+            上一步
+          </button>
+
+          <button class="next-button" :disabled="next_disabled"  @click="nextStep">
+            下一步
+          </button>
+        </div>
       </van-form>
 
     </div>
@@ -104,14 +112,20 @@
   export default {
     data () {
       return {
-        mobile: '',
+        vin: '',
         car_number: '',
         showPicker: false,
         columns: [],
-        picker_value: '02小型汽车', // 号牌种类
+        car_number_name: '02小型汽车', // 号牌种类
         loading: false,
         uploadImg,
-        cate_type_list: []
+        cate_type_list: [],
+        next_disabled: false,
+        pre_disabled: false,
+        dj_number: '',
+          ppxh: '',
+
+
       }
     },
     created() {
@@ -129,17 +143,40 @@
         this.columns = columns
       },
       handlePicker (value) { //点击号牌种类完成按钮时触发
-        this.picker_value = value
+        this.car_number_name = value
         this.showPicker = false
       },
-      async onsubmit (value) {
-        // try {
-        //   // await this.$refs.basicInfo.validate()
-        //   console.log(value)
-        //   return value
-        // } catch (e) {
-        //   console.log(e)
-        // }
+        selectCarType () {
+          this.showPicker = true
+            // this.$nextTick(() => {
+            //     this.$refs.car_type.setValues(this.car_number_name)
+            // })
+        },
+      preStep () {
+        this.$_mutations.toPre(this.$_store)
+        this.pre_disabled = true
+        setTimeout(() => this.pre_disabled = false, 500)
+      },
+      async nextStep () {
+        try {
+          // await this.$refs.basicInfo.validate()
+          let value = this.$refs.carInfo.getValues()
+            console.log(value)
+          this.$_store.car_form = value
+          this.$_mutations.toNext(this.$_store)
+          this.next_disabled = true
+          setTimeout(() => this.next_disabled = false, 500)
+        } catch (e) {
+          console.error(e)
+        }
+      },
+      carOcr (info) {
+        console.log(info)
+          this.dj_number = info.engine_num
+          this.ppxh = info.model
+          this.vin = info.vin
+          this.car_number = info.plate_num
+          this.car_number_name = info.vehicle_type
 
       }
     },

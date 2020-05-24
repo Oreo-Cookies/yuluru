@@ -26,10 +26,16 @@
         this.pre_disabled = true
         setTimeout(() => this.pre_disabled = false, 500)
       },
-       nextStep () {
-         this.$_mutations.toNext(this.$_store)
+      async nextStep (value) {
+        try {
+          await this.$refs.basicInfo.validate()
+          this.$_store.basic_form = value
+          this.$_mutations.toNext(this.$_store)
           this.next_disabled = true
           setTimeout(() => this.next_disabled = false, 500)
+        } catch (e) {
+          console.error(e)
+        }
       }
     }
 

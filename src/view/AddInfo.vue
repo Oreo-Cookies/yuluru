@@ -29,20 +29,10 @@
       }
     },
     created() {
-      this.getUserInfo()
     },
     methods: {
-      async getUserInfo () {
-        const res = await this.axios('/api/wechat/wechat_user/info')
-        // console.log(res.data)
-        // localStorage.setItem('user_info',JSON.stringify(res.data))
-      },
       submit () {
-        let basic_form = this.$refs.basic.onsubmit()
-        let car_form = this.$refs.car.onsubmit()
-        let original_form = this.$refs.original.onsubmit()
-        let current_form = this.$refs.current.onsubmit()
-        let post_form = this.$refs.post.onsubmit()
+          console.log(this.$_store.basic_form, this.$_store.car_form, this.$_store.original_form, this.$_store.current_form, this.post_form)
       }
     },
     computed: {

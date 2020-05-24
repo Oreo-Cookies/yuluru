@@ -9,22 +9,20 @@
         <span class="text">无需邮寄服务则此处不需要填写</span>
       </div>
       <van-form
-        ref="basicInfo"
+        ref="postInfo"
         validate-trigger="onChange"
         :show-error-message="false"
-        @submit="onsubmit"
       >
 
         <my-label label="收件人" :is_require="false"></my-label>
         <van-field
           class="input"
-          v-model="name"
-          name="name"
+          v-model="qz_name"
+          name="qz_name"
           placeholder="请输入"
           size="large"
           clearable
           :border="false"
-          :rules="[{ required: true, message: '请输入收件人' }]"
         >
         </van-field>
 
@@ -32,13 +30,12 @@
         <van-field
           class="input"
           type="tel"
-          v-model="mobile"
+          v-model="qz_mobile"
           name="mobile"
           size="large"
           clearable
           :border="false"
           placeholder="请输入"
-          :rules="[{ required: true, message: '请输入联系方式'}]"
         ></van-field>
 
         <my-label label="收件地址" :is_require="false"></my-label>
@@ -61,14 +58,12 @@
 
         <van-field
           class="input detail"
-          type="tel"
-          v-model="mobile"
-          name="mobile"
+          v-model="qz_address"
+          name="qz_address"
           size="large"
           clearable
           :border="false"
           placeholder="请输入详细地址"
-          :rules="[{ required: true, message: '请输入联系方式'}]"
         ></van-field>
 
 
@@ -90,24 +85,33 @@
 </template>
 
 <script>
+  import areaList from '../../untils/Area.js'
   export default {
     data () {
       return {
-        mobile: '',
+        qz_name: '',
         name: '',
         area_value: '',
+        qz_address: '',
+        qz_mobile: '',
         loading: false,
         showArea: false,
-        areaList: {},
+        areaList,
         pre_disabled: false,
         next_disabled: false
       }
     },
     created() {
+        // this.getArea()
     },
     methods:{
-      handleArea () {
-
+      async getArea () {
+          const res = await this.axios.post('api/wechat/area_city/getLists')
+          console.log(res)
+      },
+      handleArea (values) {
+          this.value = values.map((item) => item.name).join('/');
+          this.showArea = false;
       },
       preStep () {
         this.$_mutations.toPre(this.$_store)
@@ -115,19 +119,13 @@
         setTimeout(() => this.pre_disabled = false, 500)
       },
       safe () {
+          let value = this.$refs.postInfo.getValues()
+          this.$_store.postInfo = value
+          this.$_store.post_form = value
         this.$emit('safe')
         this.next_disabled = true
         setTimeout(() => this.next_disabled = false, 100)
       },
-      async onsubmit (value) {
-        // try {
-        //   console.log(value)
-        //   return value
-        // } catch (e) {
-        //   console.log(e)
-        // }
-
-      }
     },
 
   }

@@ -1,7 +1,12 @@
 import Vue from 'vue';
 export const store = new Vue.observable({
     code: '',
-    active: 1
+    active: 1,
+    basic_form: {},
+    car_form: {},
+    current_form: {},
+    original_form: {},
+    post_form: {},
 })
 export const mutations = {
     toNext (state) {
@@ -13,7 +18,6 @@ export const mutations = {
         console.log(state.active)
     },
     getCode () {
-
         return  localStorage.getItem('code')
     },
     setCode (code) {
