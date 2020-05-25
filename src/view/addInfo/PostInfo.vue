@@ -98,7 +98,13 @@
         showArea: false,
         areaList,
         pre_disabled: false,
-        next_disabled: false
+        next_disabled: false,
+          province_code: '',
+          province_name: '',
+          city_code: '',
+          city_name: '',
+          county_code: '',
+          county_name: '',
       }
     },
     created() {
@@ -110,7 +116,14 @@
           console.log(res)
       },
       handleArea (values) {
-          this.value = values.map((item) => item.name).join('/');
+          console.log(values)
+          this.area_value = values.map((item) => item.name).join('-');
+          this.province_code = values[0].code
+          this.province_name = values[0].name
+          this.city_code = values[1].code
+          this.city_name = values[1].name
+          this.county_code = values[2].code
+          this.county_name = values[2].name
           this.showArea = false;
       },
       preStep () {
@@ -120,8 +133,15 @@
       },
       safe () {
           let value = this.$refs.postInfo.getValues()
-          this.$_store.postInfo = value
-          this.$_store.post_form = value
+          this.$_store.post_form = {
+              ...value,
+              province_code: this.province_code,
+              province_name: this.province_name,
+              city_code: this.city_code,
+              city_name: this.city_name,
+              county_code: this.city_code,
+              county_name: this.county_name
+          }
         this.$emit('safe')
         this.next_disabled = true
         setTimeout(() => this.next_disabled = false, 100)

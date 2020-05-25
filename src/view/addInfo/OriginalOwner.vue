@@ -62,7 +62,7 @@
         <van-field
           class="input"
           v-model="zj_address1"
-          name="mobile"
+          name="zj_address1"
           size="large"
           clearable
           :border="false"
@@ -120,7 +120,8 @@
     },
     methods:{
       handlePicker (value) { //点击证件类型完成按钮时触发
-        this.picker_value = value
+          console.log(value)
+        this.tj_type1 = value
         this.showPicker = false
       },
       preStep () {

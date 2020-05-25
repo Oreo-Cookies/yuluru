@@ -31,8 +31,14 @@
     created() {
     },
     methods: {
-      submit () {
-          console.log(this.$_store.basic_form, this.$_store.car_form, this.$_store.original_form, this.$_store.current_form, this.post_form)
+      async submit () {
+          console.log(this.$_store.basic_form, this.$_store.car_form, this.$_store.original_form, this.$_store.current_form, this.$_store.post_form)
+          try {
+              const res = await this.axios.post('api/wechat/appoint/add', {...this.$_store.basic_form, ...this.$_store.car_form, ...this.$_store.original_form, ...this.$_store.current_form, ...this.$_store.post_form})
+              console.log(res)
+          } catch (e) {
+              console.error(e)
+          }
       }
     },
     computed: {

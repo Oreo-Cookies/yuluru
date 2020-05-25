@@ -41,9 +41,9 @@
           class="input"
           readonly
           clickable
-          :value="picker_value"
+          :value="markit_name"
           :border="false"
-          name="markit"
+          name="markit_name"
           placeholder="请选择办理业务的市场"
           @click="showPicker = true"
           :rules="[{ required: true, message: '请选择办理业务的市场' }]"
@@ -63,8 +63,8 @@
         <van-field
           class="input"
           placeholder="请选择预约日期"
-          :value="calendar_value"
-          name="date"
+          :value="appoint_date"
+          name="appoint_date"
           @click="showCalendar = true"
           :rules="[{ required: true, message: '请选择办理业务的市场' }]"
         />
@@ -96,10 +96,10 @@
         name: '',
         showPicker: false,
         columns: [],
-        picker_value: '',
+        markit_name: '',
         loading: false,
         showCalendar: false,
-        calendar_value: '',
+        appoint_date: '',
         checked: true,
         markitList: [],
         next_disabled: false,
@@ -123,21 +123,22 @@
         this.columns =columns
       },
       handlePicker (value, index) { //点击选择市场完成按钮时触发
-        this.picker_value = value
+        this.markit_name = value
         console.log(value, index)
         this.showPicker = false
-        this.market_id = this.markitList[index].market_id
+        this.market_id = this.markitList[index].id
         this.company_id = this.markitList[index].company_id
+          console.log(this.market_id, this.company_id)
       },
       handleCalendar (date) { //点击选择日期完成按钮时触发
-        this.calendar_value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+        this.appoint_date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
         this.showCalendar = false;
       },
       async nextStep () {
         try {
             await this.$refs.basicInfo.validate()
             let value = this.$refs.basicInfo.getValues()
-          this.$_store.basic_form = value
+          this.$_store.basic_form = {...value, market_id: this.market_id, company_id: this.company_id }
           this.$_mutations.toNext(this.$_store)
           this.next_disabled = true
           setTimeout(() => this.next_disabled = false, 500)

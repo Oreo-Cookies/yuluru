@@ -22,7 +22,7 @@
           clickable
           :value="tj_type2"
           :border="false"
-          name="markit"
+          name="tj_type2"
           placeholder="证件类型"
           @click="showPicker = true"
           :rules="[{ required: true, message: '请选择证件类型' }]"
@@ -109,7 +109,7 @@
   export default {
     data () {
       return {
-          tj_type2: '',
+          tj_type2: '身份证',
           zj_number2: '',
           owner_name2: '',
           owner_mobile2: '',
@@ -127,7 +127,8 @@
     },
     methods:{
       handlePicker (value) { //点击选择市场完成按钮时触发
-        this.picker_value = value
+          console.log(value)
+        this.tj_type2 = value
         this.showPicker = false
       },
       currentOcr (info) {

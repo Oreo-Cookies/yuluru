@@ -18,7 +18,7 @@
         <van-field
           class="input"
           v-model="car_number"
-          name="name"
+          name="car_number"
           placeholder="粤s"
           size="large"
           clearable
@@ -117,13 +117,14 @@
         showPicker: false,
         columns: [],
         car_number_name: '02小型汽车', // 号牌种类
+        car_number_type: 11,
         loading: false,
         uploadImg,
         cate_type_list: [],
         next_disabled: false,
         pre_disabled: false,
         dj_number: '',
-          ppxh: '',
+        ppxh: '',
 
 
       }
@@ -142,8 +143,11 @@
         })
         this.columns = columns
       },
-      handlePicker (value) { //点击号牌种类完成按钮时触发
+      handlePicker (value, index) { //点击号牌种类完成按钮时触发
+        console.log(value, index)
         this.car_number_name = value
+        this.car_number_type = this.cate_type_list[index].id
+          console.log(this.car_number_type)
         this.showPicker = false
       },
         selectCarType () {
@@ -162,7 +166,7 @@
           // await this.$refs.basicInfo.validate()
           let value = this.$refs.carInfo.getValues()
             console.log(value)
-          this.$_store.car_form = value
+          this.$_store.car_form = {...value, car_number_type: this.car_number_type}
           this.$_mutations.toNext(this.$_store)
           this.next_disabled = true
           setTimeout(() => this.next_disabled = false, 500)
