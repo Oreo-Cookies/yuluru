@@ -1,7 +1,7 @@
 <template>
   <div class="tip">
     <img :src="src" alt="">
-    <span class="text">根据监管要求证件照片仅用于业务办理</span>
+    <span class="text">根据监管要求照片仅用于业务办理</span>
   </div>
 </template>
 
@@ -30,6 +30,7 @@
     font-size:26px;
     font-weight:400;
     color: #7f828b;
+    margin-left: 10px;
   }
 }
 

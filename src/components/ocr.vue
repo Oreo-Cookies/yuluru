@@ -1,103 +1,107 @@
 <template>
  <div>
    <div class="uploadImg" @click="showPicker = true">
-     <img :src="uploadImg" alt="">
+     <img :src="imgSrc" alt="">
+     <input type="file" class="fileInput" accept="image/*"  @change="afterRead" value="">
    </div>
-   <van-popup v-model="showPicker" round position="bottom">
-     <van-picker
-       show-toolbar
-       title="选择上传方式"
-       :columns="columns"
-       @cancel="showPicker = false"
-       @change="onChange"
-    >
-       <template name="default">
-         <van-uploader
-           v-if="!is_media"
-           :max-count="1"
-           :after-read="afterRead"
-           style="position: absolute; right: 10px"
-         >
-           <van-icon name="share" color="#FF5C5C" />
-           <span style="color: #FF5C5C">选择图片</span>
-         </van-uploader>
 
-         <van-uploader
-           v-else
-           capture="camera"
-           :after-read="afterRead"
-           style="position: absolute; right: 10px"
-         >
-           <van-icon name="share" color="#FF5C5C" />
-           <span style="color: #FF5C5C">拍照上传</span>
-         </van-uploader>
-       </template>
-     </van-picker>
-   </van-popup>
-     <van-overlay :show="show_overlay" @click="show_overlay = false">
+   <div class="overlay"  v-if="show_overlay" @click="show_overlay = false">
          <div class="wrapper" @click.stop>
-           <van-loading color="#1989fa" size="45px">正在上传中，请耐心等待...</van-loading>
+           <van-loading color="#1989fa" size="45px" text-size="18px" vertical>{{text}}</van-loading>
          </div>
-     </van-overlay>
+   </div>
+
  </div>
 </template>
 
 <script>
+  import ImageCompressor from '@xkeshi/image-compressor';
+  import url_config from "../untils/url_config";
   import uploadImg from '../assets/images/upload@2x.png'
+  import uploadImg2 from '../assets/images/upload2.png'
   export default {
     name: "ocr",
       props: {
         parentName: {
             type: String,
             require: true
+        },
+        card_type: {
+          type: Number,
+          require: false,
+        },
+        picture: {
+          type: String
         }
       },
     data() {
       return {
-        uploadImg,
-        columns: ['本地图片上传', '拍照上传'],
-        showPicker: false,
-        is_media: false,
-        fileList: [],
+        imgSrc: uploadImg,
         show_overlay: false,
         image_type: 6,
-        type: 7,
+        text: '正在上传中，请耐心等待...'
       }
     },
     created() {
-      console.log(this.parentName)
         if (this.parentName !== '车辆信息') {
             this.image_type = 1
-            this.type = 0
+            this.imgSrc = uploadImg2
         }
     },
     methods: {
-      onChange (picker, values) {
-        if (values === '本地图片上传') {
-          this.is_media = false
-        } else {
-          this.is_media = true
-        }
-      },
-      async afterRead (file) {
-          try {
-              this.showPicker = false
-              this.show_overlay = true
-              const res = await this.axios.post('api/wechat/Uploads/imageBase64_upload', { image_type: this.image_type, image_url: file.content })
-              console.log(res)
-              const _res = await this.axios.post('api/wechat/ocr_sign/aliOcr', { type: this.type, image_url: res.data.image_url })
-              // this.uploadImg = 'http://testcarapi.hileader.com/' + res.data.image_url
-              // console.log(this.uploadImg)
-              console.log(_res)
-              if (this.parentName === '车辆信息') this.$emit('carOcr', _res.data.ocr)
-              if (this.parentName === '原车主信息') this.$emit('originalOcr', _res.data.ocr)
-              if (this.parentName === '现车主信息') this.$emit('currentOcr', _res.data.ocr)
+      async afterRead (e) {
+
+        try {
+            const file = e.target.files[0];
+
+            if (!file) {
+              return ;
+            }
+            this.text = '正在上传中，请耐心等待...'
+            this.show_overlay = true
+            new ImageCompressor(file, {
+              convertSize: 1000000,
+              quality: .4,
+              success: async (result) => {
+                const formData = new FormData();
+
+                formData.append('files', result, result.name);
+                formData.append('image_type',this.image_type);
+                const res = await this.axios.post('wechat/Uploads/image_upload', formData )
+                if (res.code != 200)  {
+                  this.show_overlay = false
+                  this.$toast.fail(res.msg);
+                  return
+                }
+                this.imgSrc =  url_config.baseURL + '/dataapi/Image/read?image_url=/' + res.data.image_url
+                this.text = '正在识别图片信息，请耐心等待...'
+                const _res = await this.axios.post('wechat/ocr_sign/aliOcr', { type: this.card_type, image_url: res.data.image_url })
+                this.show_overlay = false
+                if (_res.code != 200) return this.$toast.fail('识别信息失败！ 请重新上传图片或者手动输入信息');
+                if (_res.data.ocr.success == 'false') return this.$toast.fail('识别信息失败！ 请重新上传图片或者手动输入信息');
+                if (this.parentName === '车辆信息') this.$emit('carOcr', _res.data)
+                if (this.parentName === '原车主信息') this.$emit('originalOcr', _res.data)
+                if (this.parentName === '现车主信息') this.$emit('currentOcr', _res.data)
+
+              },
+              error(e) {
+                this.show_overlay = false
+                this.$toast.fail(e.message);
+              },
+            });
 
           } catch (e) {
-              console.error(e)
-          } finally {
-              this.show_overlay = false
+            this.show_overlay = false
+            this.$toast.fail('识别信息失败！ 请重新上传图片或者手动输入信息');
           }
+
+      },
+    },
+    watch: {
+      picture () {
+        if (this.picture) {
+          this.imgSrc =  url_config.baseURL + '/dataapi/Image/read?image_url=/' + this.picture
+        }
 
       }
     }
@@ -112,9 +116,9 @@
         height: 100%;
     }
 
-    .block {
-        width: 120px;
-        height: 120px;
-        background-color: #fff;
-    }
+  .block {
+      width: 120px;
+      height: 120px;
+      background-color: #fff;
+  }
 </style>

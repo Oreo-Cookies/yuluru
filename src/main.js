@@ -2,9 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router/router.config'
 import './routerNext'
-import getwxConfig from "./untils/wx.config";
 
 import vant from 'vant'
+import { Toast } from "vant";
 import 'vant/lib/index.css'
 
 import { VueAxios } from '@/axios/axios'
@@ -17,7 +17,7 @@ import tip from "./components/tip";
 
 Vue.use(VueAxios)
 Vue.use(vant)
-Vue.use(getwxConfig)
+Vue.use(Toast)
 
 Vue.config.productionTip = false
 Vue.prototype.$_store = store

@@ -1,6 +1,5 @@
 <template>
   <div class="car-info">
-    <van-progress color="#0AC261" percentage="40" stroke-width="4" :show-pivot="false" />
 
     <div class="commonContainer">
       <div class="commonTitle">车辆信息</div>
@@ -12,14 +11,14 @@
         :show-error-message="false"
       >
 
-        <my-ocr :parentName="'车辆信息'" @carOcr="carOcr"></my-ocr>
+        <my-ocr :parentName="'车辆信息'" @carOcr="carOcr" :card_type="card_index" :picture="xsz_photo"></my-ocr>
 
         <my-label label="车牌号码" ></my-label>
         <van-field
           class="input"
           v-model="car_number"
           name="car_number"
-          placeholder="粤s"
+          placeholder="粤S"
           size="large"
           clearable
           :border="false"
@@ -36,7 +35,7 @@
           :border="false"
           name="car_number_name"
           placeholder="02小型汽车"
-          @click="selectCarType"
+          @click="showPicker = true"
           :rules="[{ required: true, message: '请选择号牌种类' }]"
         />
         <van-popup v-model="showPicker" round position="bottom">
@@ -52,7 +51,9 @@
           />
         </van-popup>
 
-        <my-label label="车架号" ></my-label>
+        <my-label label="车架号" >
+          <span v-if="this.vin.length" class="str-length">{{this.vin.length}}</span>
+        </my-label>
         <van-field
           class="input"
           v-model="vin"
@@ -61,34 +62,115 @@
           clearable
           :border="false"
           placeholder="请输入"
-          maxlength="17"
-          :show-word-limit="true"
           :rules="[{ required: true, message: '请输入车架号'}]"
         ></van-field>
 
         <my-label label="品牌型号" ></my-label>
         <van-field
-          class="input"
-          v-model="ppxh"
-          name="ppxh"
-          size="large"
-          clearable
-          :border="false"
-          placeholder="请输入"
-          :rules="[{ required: true, message: '请输入品牌型号'}]"
+                class="input"
+                v-model="ppxh"
+                name="ppxh"
+                size="large"
+                clearable
+                :border="false"
+                placeholder="请输入"
+                :rules="[{ required: true, message: '请输入品牌型号'}]"
         ></van-field>
 
-        <my-label label="登记证号" ></my-label>
+        <my-label label="登记证号" >
+          <span v-if="this.dj_number.length" class="str-length">{{this.dj_number.length}}</span>
+        </my-label>
         <van-field
           class="input"
+          type="tel"
           v-model="dj_number"
           name="dj_number"
           size="large"
           clearable
           :border="false"
           placeholder="请输入"
-          :rules="[{ required: true, message: '请输入登记证号'}]"
+          maxlength="12"
+          :rules="[{ required: true, message: '请填写正确的登记证号'},]"
         ></van-field>
+
+        <my-label label="车辆类型" :is_require="false"></my-label>
+        <van-field
+                class="input"
+                v-model="cllx"
+                name="cllx"
+                size="large"
+                clearable
+                :border="false"
+                placeholder="请输入"
+        ></van-field>
+
+        <my-label label="所有人" :is_require="false"></my-label>
+        <van-field
+                class="input"
+                v-model="xsz_syren"
+                name="xsz_syren"
+                placeholder="请输入"
+                size="large"
+                clearable
+                :border="false"
+        >
+        </van-field>
+
+        <my-label label="行驶证地址" :is_require="false"></my-label>
+        <van-field
+                class="input"
+                v-model="xsz_address"
+                :border="false"
+                name="xsz_address"
+                clearable
+                placeholder="请输入行驶证地址"
+        />
+
+        <my-label label="注册日期" :is_require="false"></my-label>
+        <van-field
+                class="input"
+                readonly
+                clickable
+                :value="zc_date"
+                name="zc_date"
+                size="large"
+                clearable
+                :border="false"
+                @click="show_zc_data = true"
+                placeholder="YYYY-MM-DD"
+        ></van-field>
+        <van-popup v-model="show_zc_data" round position="bottom">
+          <van-datetime-picker
+                  v-model="currentDate_zc"
+                  type="date"
+                  title="选择年月日"
+                  @cancel="show_zc_data = false"
+                  @confirm="handle_zc_data"
+          />
+        </van-popup>
+
+        <my-label label="发证日期" :is_require="false"></my-label>
+        <van-field
+                class="input"
+                readonly
+                clickable
+                :value="fz_date"
+                name="fz_date"
+                size="large"
+                clearable
+                :border="false"
+                @click="show_fz_data = true"
+                placeholder="YYYY-MM-DD"
+        ></van-field>
+        <van-popup v-model="show_fz_data" round position="bottom">
+          <van-datetime-picker
+                  v-model="currentDate_fz"
+                  type="date"
+                  title="选择年月日"
+                  @cancel="show_fz_data = false"
+                  @confirm="handle_fz_data"
+          />
+        </van-popup>
 
 
         <div class="button-box">
@@ -113,11 +195,11 @@
     data () {
       return {
         vin: '',
-        car_number: '',
+        car_number: '粤S',
         showPicker: false,
         columns: [],
         car_number_name: '02小型汽车', // 号牌种类
-        car_number_type: 11,
+        car_number_type: 12,
         loading: false,
         uploadImg,
         cate_type_list: [],
@@ -125,16 +207,39 @@
         pre_disabled: false,
         dj_number: '',
         ppxh: '',
-
-
+        fz_date: '',
+        zc_date: '',
+        xsz_address: '',
+        xsz_syren: '',
+        cllx: '',
+        card_index: 7,
+        xsz_photo: null,
+        show_zc_data: false,
+        show_fz_data: false,
+        currentDate_zc: new Date(),
+        currentDate_fz: new Date(),
       }
     },
-    created() {
-      this.getCateType()
+    async created() {
+      await this.getCateType()
     },
     methods:{
+      fromEdit (detailInfo) {
+        this.ppxh = detailInfo.ppxh
+        this.vin = detailInfo.vin
+        this.car_number = detailInfo.car_number
+        this.fz_date = detailInfo.fz_date
+        this.zc_date = detailInfo.zc_date
+        this.xsz_address = detailInfo.xsz_address
+        this.xsz_syren = detailInfo.xsz_syren
+        this.cllx = detailInfo.cllx
+        this.car_number_type = detailInfo.car_number_type
+        this.car_number_name = detailInfo.car_number_name
+        this.dj_number = detailInfo.dj_number
+        this.xsz_photo = detailInfo.xsz_photo
+      },
       async getCateType () {
-        const res = await this.axios.post('api/wechat/sort/index')
+        const res = await this.axios.post('/wechat/sort/index')
         console.log(res)
         this.cate_type_list = res.data
         let columns = []
@@ -147,15 +252,16 @@
         console.log(value, index)
         this.car_number_name = value
         this.car_number_type = this.cate_type_list[index].id
-          console.log(this.car_number_type)
         this.showPicker = false
       },
-        selectCarType () {
-          this.showPicker = true
-            // this.$nextTick(() => {
-            //     this.$refs.car_type.setValues(this.car_number_name)
-            // })
-        },
+      handle_fz_data (value) {
+        this.fz_date = new Date(value).toLocaleDateString().replace(/\//g, '-')
+        this.show_fz_data = false
+      },
+      handle_zc_data (value) {
+        this.zc_date = new Date(value).toLocaleDateString().replace(/\//g, '-')
+        this.show_zc_data = false
+      },
       preStep () {
         this.$_mutations.toPre(this.$_store)
         this.pre_disabled = true
@@ -163,35 +269,35 @@
       },
       async nextStep () {
         try {
-          // await this.$refs.basicInfo.validate()
+          await this.$refs.carInfo.validate()
           let value = this.$refs.carInfo.getValues()
-            console.log(value)
-          this.$_store.car_form = {...value, car_number_type: this.car_number_type}
+          if (value.dj_number.length < 12) {
+            return this.$toast.fail('请输入正确的登记证号')
+          }
+          this.$_store.car_form = {...value, car_number_type: this.car_number_type, xsz_photo: this.xsz_photo}
           this.$_mutations.toNext(this.$_store)
           this.next_disabled = true
           setTimeout(() => this.next_disabled = false, 500)
         } catch (e) {
-          console.error(e)
+          this.$toast.fail('请填写完整信息')
         }
       },
       carOcr (info) {
         console.log(info)
-          this.dj_number = info.engine_num
-          this.ppxh = info.model
-          this.vin = info.vin
-          this.car_number = info.plate_num
-          this.car_number_name = info.vehicle_type
-
-      }
+        this.ppxh = info.ocr.model
+        this.vin = info.ocr.vin
+        this.car_number = info.ocr.plate_num
+        this.fz_date = info.ocr.issue_date
+        this.zc_date = info.ocr.register_date
+        this.xsz_address = info.ocr.addr
+        this.xsz_syren = info.ocr.owner
+        this.cllx = info.ocr.vehicle_type
+        this.xsz_photo = info.url
+      },
     },
 
   }
 </script>
 
 <style scoped>
-  .checkbox {
-    height: 60px;
-    margin-top: 20px;
-    font-size: 24px;
-  }
 </style>

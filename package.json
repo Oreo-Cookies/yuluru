@@ -5,12 +5,14 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
+    "test": "vue-cli-service build --mode test",
     "lint": "vue-cli-service lint"
   },
   "author": "zhl",
   "dependencies": {
     "@antv/f2": "^3.6.2",
     "@jiaminghi/data-view": "^2.7.3",
+    "@xkeshi/image-compressor": "^0.5.3",
     "autoprefixer": "^9.8.0",
     "axios": "^0.19.2",
     "base-64": "^0.1.0",
@@ -51,7 +53,18 @@
   },
   "postcss": {
     "plugins": {
-      "autoprefixer": {}
+      "autoprefixer": {
+        "browsers": [
+          "Android >= 4.0",
+          "iOS >= 8"
+        ]
+      },
+      "postcss-pxtorem": {
+        "rootValue": 37.5,
+        "propList": [
+          "*"
+        ]
+      }
     }
   },
   "browserslist": [

@@ -2,10 +2,37 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-size: 28px;
 }
 html,body {
   height: 100%;
 }
+
+
+a {
+  text-decoration: none;
+}
+/*正常的未被访问过的链接*/
+a:link {
+  text-decoration: none;
+}
+/*已经访问过的链接*/
+a:visited {
+  text-decoration: none;
+}
+/*鼠标划过(停留)的链接*/
+a:hover {
+  text-decoration: none;
+}
+/* 正在点击的链接，鼠标在元素上按下还没有松开*/
+a:active {
+  text-decoration: none;
+}
+/* 获得焦点的时候 鼠标松开时显示的颜色*/
+a:focus {
+  text-decoration: none;
+}
+
 button {
   border: 1px solid transparent;  //自定义边框
   outline: none;    //消除默认点击蓝色边框效果
@@ -32,11 +59,21 @@ button {
   color:rgba(0,0,0,1);
   line-height:40px;
   margin-top: 30px;
+  position: relative;
+  .str-length {
+    position: absolute;
+    right: 0;
+    top: 90px;
+    z-index: 9;
+    opacity: 0.65;
+    font-size: 24px;
+  }
 }
 .input {
   margin-top: 30px;
-  font-size: 34px !important;
+  font-size: 30px !important;
   border-bottom: 1px solid #eee;
+  line-height: initial !important;
 }
 .require {
   color: #FF5C5C;
@@ -57,11 +94,10 @@ button {
 }
 
 .uploadImg {
-  width: 100vw;
   height: ~'calc(100vw * 446 / 713)';
   position: relative;
   img {
-    width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 50%;
@@ -99,4 +135,133 @@ button {
   margin-top: 100px;
   margin-bottom: 50px;
   text-align: center;
+}
+
+/deep/.van-popup--bottom {
+  height: 300px;
+}
+.van-toast {
+  font-size: 30px !important;
+  line-height: 50px !important;
+  width: 50% !important;
+}
+.van-field__control {
+  opacity: 0.65;
+}
+
+.van-tabs--line .van-tabs__wrap {
+  height: 99px !important;
+}
+
+.van-tab__text {
+  font-size: 30px;
+}
+
+.panel {
+  width: 100%;
+  height:395px;
+  background:rgba(255,255,255,1);
+  border-radius:8px;
+  padding: 0 32px;
+  margin-top: 24px;
+
+  .panel-header {
+    height: 73px;
+    width: 100%;
+    padding-top: 16px;
+    .car-number {
+      font-weight:500;
+      color:rgba(87,137,250,1);
+      line-height: 42px;
+      font-size: 30px;
+    }
+    .href {
+      float: right;
+      font-size:30px;
+      font-weight:400;
+      color:rgba(96,97,97,1);
+      line-height:42px;
+      a {
+        color:rgba(96,97,97,1);
+        margin-left: 28px;
+      }
+    }
+  }
+
+  .panel-info {
+    height: 144px;
+    width: 100%;
+    border-bottom: 1px solid #F1F2F3;
+    .title {
+      padding-top: 28px;
+      font-size: 28px;
+      font-weight: 500;
+    }
+    .text {
+      height: 76px;
+      line-height: 76px;
+      color: #BCC1C4;
+      font-size: 30px;
+    }
+  }
+}
+
+.van-picker-column__item {
+  font-size: 32px;
+}
+
+.van-picker__title,.van-calendar__header-title,.van-picker__cancel, .van-picker__confirm, .van-calendar__header-subtitle {
+  font-size: 28px !important;
+  line-height: 30px !important;
+}
+.van-dialog {
+  font-size: 28px !important;
+  width: 500px !important;
+  line-height: 45px !important;
+}
+.van-dialog__header {
+  font-size: 30px !important;
+  line-height: 50px !important;
+}
+.van-dialog__message {
+  font-size: 28px !important;
+  line-height: 45px !important;
+}
+.van-picker__toolbar {
+  height: 80px !important;
+}
+.van-calendar__header {
+  padding-top: 20px;
+}
+.van-calendar__weekdays {
+  height: 40px !important;
+}
+.van-calendar__weekday {
+  font-size: 26px;
+}
+
+.fileInput{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  clear: both;
+  display: block;
+  margin: auto;
+  background-color: red;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,.7);
 }

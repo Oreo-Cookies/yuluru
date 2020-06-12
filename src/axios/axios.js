@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import axios from 'axios'
 import {mutations} from './simpleStore'
+import config from '../untils/url_config'
+
 
 // Vue.use(message)
 // 创建 axios 实例
@@ -40,8 +42,8 @@ const VueAxios = {
 const service = axios.create({
 
     // baseURL:config.baseURL,
-    // baseURL: 'http://testcarapi.hileader.com',
-    // timeout: 6000 // 请求超时时间
+    baseURL: config.baseURL,
+    timeout: 10000 // 请求超时时间
 })
 
 const err = (error) => {

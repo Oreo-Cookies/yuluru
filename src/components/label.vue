@@ -2,6 +2,7 @@
   <div class="commonLable">
     <span class="require" v-if="is_require">*</span>
     <span>{{label}}</span>
+    <slot></slot>
   </div>
 </template>
 

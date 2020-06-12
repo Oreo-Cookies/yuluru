@@ -7,15 +7,17 @@ export const store = new Vue.observable({
     current_form: {},
     original_form: {},
     post_form: {},
+    detailInfo: null
 })
 export const mutations = {
+    toFirst (state) {
+        state.active = 1
+    },
     toNext (state) {
         state.active++
-        console.log(state.active)
     },
     toPre (state) {
         state.active--
-        console.log(state.active)
     },
     getCode () {
         return  localStorage.getItem('code')

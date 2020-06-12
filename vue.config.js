@@ -15,8 +15,12 @@ function addStyleResource(rule) {
       ]
     })
 }
-const webpackConfig = {
 
+const webpackConfig = {
+  // 基本路径
+  publicPath: "./",
+  // 输出文件目录
+  outputDir: process.env.outputDir,
 
   lintOnSave: false,
   configureWebpack: {
@@ -71,7 +75,7 @@ const webpackConfig = {
         plugins: [
           autoprefixer(),
           pxtorem({
-            rootValue: 45,
+            rootValue: 37.5,
             propList: ['*']
           })
         ]
