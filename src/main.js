@@ -9,6 +9,7 @@ import 'vant/lib/index.css'
 
 import { VueAxios } from '@/axios/axios'
 import { store, mutations } from './axios/simpleStore'
+import './untils/vconsole.config'
 
 import buttons from "./components/buttons";
 import label from "./components/label";

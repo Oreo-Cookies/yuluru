@@ -1,6 +1,7 @@
 const path = require('path')
 const autoprefixer = require('autoprefixer')
 const pxtorem = require('postcss-pxtorem')
+
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -15,6 +16,8 @@ function addStyleResource(rule) {
       ]
     })
 }
+
+
 
 const webpackConfig = {
   // 基本路径
@@ -47,6 +50,7 @@ const webpackConfig = {
         "@": resolve("src") // 缓存src目录为@符号，避免重复寻址
       }
     },
+
   },
   chainWebpack: (config) => {
     config.resolve.alias

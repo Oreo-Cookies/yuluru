@@ -6,7 +6,7 @@
       <my-tip></my-tip>
       <div class="body">
         <img class="people" :src="people" alt="点击进行人脸识别">
-        <input type="file" ref="input" name="video" class="video" accept="video/*" capture="user" οnchange="videoChange()" />
+        <input type="file" ref="input" name="video" class="video" accept="video/*" capture="user" @change="videoChange" />
         <video ref="videos" muted preload="auto"></video>
         <canvas ref="canvas" style="display: none"></canvas>
       </div>
@@ -81,8 +81,10 @@
         }
       },
       videoChange () {
+        console.log('拍完了')
+        console.log(this.$refs.input.files)
         let file = this.$refs.input.files[0];
-        console.log(file)
+        console.info(file)
         let fileSize = (Math.round(file.size / 1024)).toFixed();
         let url = URL.createObjectURL(file);
         console.log(url);
