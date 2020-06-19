@@ -269,12 +269,12 @@
       },
       async nextStep () {
         try {
-          await this.$refs.carInfo.validate()
-          let value = this.$refs.carInfo.getValues()
-          if (value.dj_number.length < 12) {
-            return this.$toast.fail('请输入正确的登记证号')
-          }
-          this.$_store.car_form = {...value, car_number_type: this.car_number_type, xsz_photo: this.xsz_photo}
+          // await this.$refs.carInfo.validate()
+          // let value = this.$refs.carInfo.getValues()
+          // if (value.dj_number.length < 12) {
+          //   return this.$toast.fail('请输入正确的登记证号')
+          // }
+          // this.$_store.car_form = {...value, car_number_type: this.car_number_type, xsz_photo: this.xsz_photo}
           this.$_mutations.toNext(this.$_store)
           this.next_disabled = true
           setTimeout(() => this.next_disabled = false, 500)

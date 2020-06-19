@@ -237,6 +237,8 @@
             return this.$toast.fail('请输入正确的手机号')
           }
           this.$_store.original_form = {...value, zj_type1: this.zj_type1, zj_photo1: this.zj_photo1}
+          this.$eventBus.$emit('getOriginalName', value.owner_name1)
+          this.$eventBus.$emit('getWhere', 1)
           this.$_mutations.toNext(this.$_store)
           this.next_disabled = true
           setTimeout(() => this.next_disabled = false, 500)

@@ -262,16 +262,19 @@
       preStep () {
         this.$_mutations.toPre(this.$_store)
         this.pre_disabled = true
+        this.$eventBus.$emit('getWhere', 1)
         setTimeout(() => this.pre_disabled = false, 500)
       },
       async nextStep () {
         try {
-          await this.$refs.currentInfo.validate()
+          // await this.$refs.currentInfo.validate()
           let value = this.$refs.currentInfo.getValues()
-          if (value.owner_mobile2.length > 0 && value.owner_mobile2.length < 11) {
-            return this.$toast.fail('请输入正确的手机号')
-          }
-          this.$_store.current_form = {...value, zj_type2: this.zj_type2, zj_photo2: this.zj_photo2}
+          // if (value.owner_mobile2.length > 0 && value.owner_mobile2.length < 11) {
+          //   return this.$toast.fail('请输入正确的手机号')
+          // }
+          // this.$_store.current_form = {...value, zj_type2: this.zj_type2, zj_photo2: this.zj_photo2}
+          this.$eventBus.$emit('getCurrentName', value.owner_name2)
+          this.$eventBus.$emit('getWhere', 2)
           this.$_mutations.toNext(this.$_store)
           this.next_disabled = true
           setTimeout(() => this.next_disabled = false, 500)

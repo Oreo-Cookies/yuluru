@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router/router.config'
 import './routerNext'
+import Video from 'video.js'
+import 'video.js/dist/video-js.css'
 
 import vant from 'vant'
 import { Toast } from "vant";
@@ -20,9 +22,13 @@ Vue.use(VueAxios)
 Vue.use(vant)
 Vue.use(Toast)
 
+const eventBus = new Vue()
+
 Vue.config.productionTip = false
 Vue.prototype.$_store = store
 Vue.prototype.$_mutations = mutations
+Vue.prototype.$video = Video
+Vue.prototype.$eventBus = eventBus
 
 
 Vue.component('my-buttons', buttons)
