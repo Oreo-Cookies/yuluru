@@ -4,6 +4,7 @@ import router from './router/router.config'
 import './routerNext'
 import Video from 'video.js'
 import 'video.js/dist/video-js.css'
+import wechatTitle from 'vue-wechat-title'
 
 import vant from 'vant'
 import { Toast } from "vant";
@@ -21,6 +22,7 @@ import tip from "./components/tip";
 Vue.use(VueAxios)
 Vue.use(vant)
 Vue.use(Toast)
+Vue.use(wechatTitle)
 
 const eventBus = new Vue()
 

@@ -1,6 +1,6 @@
 <template>
   <div id="app" :style="{height:setheight + 'px'}">
-    <!-- <MobileCharts /> -->
+    <div v-wechat-title="$route.meta.title"></div>
     <router-view></router-view>
   </div>
 </template>

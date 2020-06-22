@@ -4,9 +4,9 @@
     <basic-info ref="basic" v-show="active === 1" :is_edit="is_edit"></basic-info>
     <car-info ref="car" v-show="active === 2"></car-info>
     <original-owner ref="original" v-show="active === 3"></original-owner>
-    <FaceRecognition v-show="active === 4"></FaceRecognition>
+<!--    <FaceRecognition v-show="active === 4"></FaceRecognition>-->
     <current-owner ref="current" v-show="active === 5"></current-owner>
-    <FaceRecognition v-show="active === 6"></FaceRecognition>
+<!--    <FaceRecognition v-show="active === 6"></FaceRecognition>-->
     <post-info ref="post" v-show="active === 7" :is_edit="is_edit" @safe="submit"></post-info>
   </div>
 </template>
@@ -17,7 +17,7 @@
   import OriginalOwner from "./addInfo/OriginalOwner";
   import CurrentOwner from "./addInfo/CurrentOwner";
   import PostInfo from "./addInfo/PostInfo";
-  import FaceRecognition from "./addInfo/FaceRecognition";
+  // import FaceRecognition from "./addInfo/FaceRecognition";
 
   export default {
     name: "AddInfo",
@@ -27,7 +27,7 @@
       OriginalOwner,
       CurrentOwner,
       PostInfo,
-      FaceRecognition
+      // FaceRecognition
     },
     data () {
       return {

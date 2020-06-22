@@ -7,12 +7,18 @@ const routers = [
     {
         path: '/',
         name: 'addInfo',
-        component:() => import('../view/AddInfo')
+        component:() => import('../view/AddInfo'),
+        meta: {
+            title: " 预录入"
+        },
     },
     {
         path:'/carList',
         name:'carList',
-        component:() => import('../view/CarList')
+        component:() => import('../view/CarList'),
+        meta: {
+            title: "车辆列表"
+        },
     }
 
 ]
