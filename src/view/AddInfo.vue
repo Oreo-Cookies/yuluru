@@ -5,9 +5,9 @@
     <car-info ref="car" v-show="active === 2"></car-info>
     <original-owner ref="original" v-show="active === 3"></original-owner>
 <!--    <FaceRecognition v-show="active === 4"></FaceRecognition>-->
-    <current-owner ref="current" v-show="active === 5"></current-owner>
+    <current-owner ref="current" v-show="active === 4"></current-owner>
 <!--    <FaceRecognition v-show="active === 6"></FaceRecognition>-->
-    <post-info ref="post" v-show="active === 7" :is_edit="is_edit" @safe="submit"></post-info>
+    <post-info ref="post" v-show="active === 5" :is_edit="is_edit" @safe="submit"></post-info>
   </div>
 </template>
 
